@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil Derriel Mulya Ramadhan</title>
+
+    <style>
+      
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #222222;
+            background-color: #f5f7fb;
+        }
+
+        header {
+            background-color: #172554;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+        }
+
+        nav {
+            background-color: #f2f2f2;
+            padding: 10px;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        nav a {
+            color: #172554;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+
+        .judul-bagian {
+            color: #172554;
+            border-bottom: 2px solid #172554;
+            padding-bottom: 4px;
+        }
+
+        .teks-rapi {
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background-color: #DBEAFE;
+        }
+
+        .tabel-layout {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .kolom-utama {
+            width: 70%;
+            vertical-align: top;
+            padding: 10px;
+        }
+
+        .kolom-samping {
+            width: 30%;
+            vertical-align: top;
+            padding: 10px;
+        }
+
+        .kotak-info {
+            background-color: #f2f2f2;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dddddd;
+        }
+
+        .kotak-info h3 {
+            margin-top: 0;
+            color: #172554;
+        }
+
+        .tabel-data {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #cccccc;
+        }
+
+        .tabel-data th,
+        .tabel-data td {
+            padding: 8px;
+            border: 1px solid #cccccc;
+        }
+
+        .tabel-data th {
+            background-color: #172554;
+            color: white;
+        }
+
+        .baris-selang {
+            background-color: #f7f7f7;
+        }
+
+        .foto-profil {
+            width: 220px;
+            height: 220px;
+            border: 4px solid #172554;
+            border-radius: 50%;
+        }
+
+        .foto-profil-container {
+            flex-direction: column;
+            display: flex;
+            align-items: center;
+        }
+
+        .gallery {
+            display: grid;
+            justify-content: center;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #777777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+    <header>
+        <h1>DERRIEL MULYA RAMADHAN</h1>
+        <p><em>Mahasiswa Sistem Informasi | Technology Enthusiast</em></p>
+    </header>
+
+    <hr>
+
+    <!-- ================= MENU NAVIGASI ================= -->
+    <nav>
+        <b>Menu:</b>
+        <a href="#tentang">Tentang</a> |
+        <a href="#data">Data Diri</a> |
+        <a href="#project">Project</a>
+    </nav>
+
+    <hr>
+
+    <!-- ================= ISI UTAMA ================= -->
+    <main>
+
+        <!-- Layout dua kolom menggunakan tabel -->
+        <table class="tabel-layout">
+            <tr>
+
+                <!-- Kolom utama -->
+                <td class="kolom-utama">
+
+                    <!-- ================= TENTANG ================= -->
+                    <section id="tentang">
+                        <h2 class="judul-bagian">Tentang Saya</h2>
+
+                        <p class="teks-rapi">
+                            Halo, saya <b>Derriel Mulya Ramadhan</b>, mahasiswa
+                            Sistem Informasi di Fakultas Matematika dan
+                            Ilmu Pengetahuan Alam, Universitas Tanjungpura.
+                        </p>
+
+                        <p class="teks-rapi">
+                            Saya memiliki ketertarikan pada bidang
+                            <mark class="highlight">Graphic Design</mark>,
+                            <mark class="highlight">Motion Graphics</mark>,
+                            dan <mark class="highlight">Data Analysis</mark>.
+                            Saya juga tertarik mempelajari bagaimana teknologi
+                            dapat digunakan untuk membuat sistem yang bermanfaat.
+                        </p>
+
+                    
+                    </section>
+
+                    <!-- ================= DATA DIRI ================= -->
+                    <section id="data">
+                        <h2 class="judul-bagian">Data Diri</h2>
+
+                        <table class="tabel-data">
+                            <tr>
+                                <th>Nama</th>
+                                <td>Derriel Mulya Ramadhan</td>
+                            </tr>
+
+                            <tr class="baris-selang">
+                                <th>NIM</th>
+                                <td>H1101251026</td>
+                            </tr>
+
+                            <tr>
+                                <th>Program Studi</th>
+                                <td>Sistem Informasi</td>
+                            </tr>
+
+                            <tr class="baris-selang">
+                                <th>Fakultas</th>
+                                <td>Matematika dan Ilmu Pengetahuan Alam</td>
+                            </tr>
+
+                            <tr>
+                                <th>Universitas</th>
+                                <td>Universitas Tanjungpura</td>
+                            </tr>
+                        </table>
+                    </section>
+                    <section id="project">
+                        <h2 class="judul-bagian">Grafik Desain</h2>
+
+                        <h3 class="teks-rapi">Koleksi "Nocturnal Echoes"</h3>
+
+                        <p>
+                            Sebuah kumpulan eksplorasi seni digital yang berfokus pada estetika gelap, cahaya neon, 
+                            dan distorsi emosional. Koleksi ini menggabungkan teknik fotomanipulasi dan grafis 
+                            generatif untuk menciptakan atmosfer yang moody dan surealis.
+                        </p>
+
+                        <figure class="gallery">
+                            <img src="foto/Ethereal copy.jpg" style="width: 100%;" alt="Karya 1" />
+                            <img src="foto/glasseffect copy.jpg" style="width: 100%;" alt="Karya 2" />
+                            <img src="foto/warm copy.jpg" style="width: 100%;" alt="Karya 3" />
+                            <img src="foto/gabut.jpg" style="width: 100%;" alt="Karya 4"  />
+                        </figure>
+
+                        <p>
+                            <b>Portofolio Lengkap :</b>
+                            <a href="https://drl.arc.portfolio.com" target="_blank">
+                                drl.arc.portfolio.com
+                            </a>
+                        </p>
+                    </section>
+                    <!-- ================= MINAT ================= -->
+                    <section>
+                        <h2 class="judul-bagian">Minat</h2>
+
+                        <ul>
+                            <li>Graphic Design</li>
+                            <li>Motion Graphics</li>
+                            <li>Data Analysis</li>
+                            <li>Pengembangan Sistem Informasi</li>
+                        </ul>
+
+                        
+                    </section>
+
+                </td>
+
+                <!-- Kolom samping -->
+                <td class="kolom-samping">
+
+                    <!-- ================= FOTO ================= -->
+                    <aside class="kotak-info">
+                        <h3> Profil</h3>
+
+                        <figure class="foto-profil-container">
+                            <img src="foto/sakura.jpg" 
+                                 alt="Foto profil "
+                                 class="foto-profil">
+
+                            <figcaption style="text-align: center; margin-top: 8px;">
+                                Derriel Mulya Ramadhan
+                            </figcaption>
+                        </figure>
+                    </aside>
+
+                    <br>
+
+                    <!-- ================= INFORMASI KONTAK ================= -->
+                    <aside class="kotak-info">
+                        <h3>Informasi Kontak</h3>
+
+                        <p>
+                            <small>
+                                Email:<br>
+                                h1101251026@student.untan.ac.id
+                            </small>
+                        </p>
+
+                        <p>
+                            <small>
+                                GitHub:<br>
+                                <a href="https://github.com/drlorgbgr"
+                                   target="_blank">
+                                    github.com/drlorgbgr
+                                </a>
+                            </small>
+                        </p>
+
+                        <p>
+                            <small>
+                                LinkedIn:<br>
+                                <a href="https://www.linkedin.com/in/derriel-mulya-ramadhan/"
+                                   target="_blank">
+                                    linkedin.com/in/derriel-mulya-ramadhan
+                                </a>
+                            </small>
+                        </p>
+                    </aside>
+
+                </td>
+            </tr>
+        </table>
+
+        <hr>
+
+        
+    </main>
+
+    <hr>
+
+    <!-- ================= FOOTER ================= -->
+    <footer>
+        <p>
+            <small>
+                &copy; 2026 - Derriel Mulya Ramadhan.
+                
+            </small>
+        </p>
+    </footer>
+
+</body>
+</html>
