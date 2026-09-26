@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeyuCreative Studio — Digital & Stage Design Agency</title>
+    <!-- Menghubungkan berkas CSS eksternal -->
+    <link rel="stylesheet" href="dom.css">
+</head>
+<body>
+    <!-- Bagian Navigasi (Menu) -->
+    <header>
+        <div class="logo">DeyuCreative<span>Studio</span></div>
+        <nav>
+            <ul id="menu-navigasi">
+                <li><a href="#" data-target="beranda" class="aktif">Beranda</a></li>
+                <li><a href="#" data-target="portofolio">Portofolio</a></li>
+                <li><a href="#" data-target="registrasi">Registrasi Member</a></li>
+                <li><a href="#" data-target="pemesanan">Pemesanan Layanan</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Wadah Utama Konten -->
+    <main>
+        <!-- Halaman Beranda -->
+        <section id="beranda" class="halaman aktif">
+            <div class="hero">
+                <p class="eyebrow">Digital & Stage Design Agency</p>
+                <h1>Dari Layar HP Sampai Panggung Utama, Visual Brand Kamu Bikin Pangling.</h1>
+                <p>DeyuCreative Studio bantu bikin rapi identitas digital kamu lewat desain sosmed dan strategi marketing, sekaligus ngerancang tata panggung event yang megah.</p>
+            </div>
+            
+            <!-- Komponen Slide Galeri Foto -->
+            <div class="wadah-slide">
+                <h2>Galeri Karya & Lingkungan Kerja Kami</h2>
+                <div class="area-slide">
+                    <img src="https://i.pinimg.com/736x/b8/7f/b0/b87fb0791374331a9633d92e56088432.jpg" alt="Main Stage Festival Musik" class="slide aktif">
+                    <img src="https://i.pinimg.com/1200x/4d/30/40/4d30402f7270f3bab3c567d4aa605669.jpg" alt="Visual Grid Feed Brand Fashion" class="slide">
+                    <img src="https://i.pinimg.com/1200x/2a/00/42/2a004210f2670427d1fd0a0416dc3fb5.jpg" alt="3D Stage Corporate Awarding" class="slide">
+                </div>
+                <div class="kontrol-slide">
+                    <button id="tombol-sebelumnya">❮ Sebelumnya</button>
+                    <button id="tombol-selanjutnya">Selanjutnya ❯</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Halaman Portofolio -->
+        <section id="portofolio" class="halaman sembunyi">
+            <h2>Portofolio Karya DeyuCreative Studio</h2>
+            <p>Berikut adalah hasil karya desain digital dan tata panggung interaktif dari tim kami.</p>
+            
+            <!-- Form untuk menambah portofolio baru melalui DOM -->
+            <div class="form-tambah-portofolio">
+                <h3>Tambah Proyek Baru (Simulasi DOM)</h3>
+                <input type="text" id="input-judul-proyek" placeholder="Judul Proyek (Cth: 3D Stage Festival 2026)">
+                <input type="text" id="input-deskripsi-proyek" placeholder="Deskripsi Singkat Proyek">
+                <button id="tombol-tambah-proyek">Tambah ke Portofolio</button>
+            </div>
+
+            <!-- Wadah galeri portofolio -->
+            <div id="galeri-portofolio" class="grid-portofolio">
+                <!-- Item bawaan awal -->
+                <div class="kartu-portofolio">
+                    <h3>Main Stage Design Festival Musik</h3>
+                    <p>Rancangan tata panggung 3D interaktif untuk festival musik nasional.</p>
+                    <button class="tombol-hapus">Hapus Proyek</button>
+                </div>
+                <div class="kartu-portofolio">
+                    <h3>Visual Grid Feed Brand Fashion</h3>
+                    <p>Pengembangan identitas visual Instagram feed dan Story promosi.</p>
+                    <button class="tombol-hapus">Hapus Proyek</button>
+                </div>
+                <div class="kartu-portofolio">
+                    <h3>Digital Campaign Launching Product</h3>
+                    <p>Strategi kampanye digital terintegrasi untuk peluncuran produk baru.</p>
+                    <button class="tombol-hapus">Hapus Proyek</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Halaman Registrasi Member -->
+        <section id="registrasi" class="halaman sembunyi">
+            <h2>Bergabung Menjadi Member Client</h2>
+            <form id="form-registrasi" class="form-standar">
+                <div class="grup-input">
+                    <label for="reg-nama">Nama Lengkap</label>
+                    <input type="text" id="reg-nama" placeholder="Masukkan nama lengkap Anda">
+                    <small class="pesan-galat"></small>
+                </div>
+                <div class="grup-input">
+                    <label for="reg-email">Alamat Surel (Email)</label>
+                    <input type="email" id="reg-email" placeholder="nama@perusahaan.com">
+                    <small class="pesan-galat"></small>
+                </div>
+                <div class="grup-input">
+                    <label for="reg-password">Kata Sandi</label>
+                    <input type="password" id="reg-password" placeholder="Minimal 6 karakter">
+                    <small class="pesan-galat"></small>
+                </div>
+                <button type="submit">Daftar Sekarang</button>
+                <div id="pesan-sukses-reg" class="pesan-sukses sembunyi">Registrasi Berhasil! Selamat datang di DeyuCreative Studio.</div>
+            </form>
+        </section>
+
+        <!-- Halaman Pemesanan Layanan -->
+        <section id="pemesanan" class="halaman sembunyi">
+            <h2>Formulir Pemesanan Layanan Jasa</h2>
+            <form id="form-pemesanan" class="form-standar">
+                <div class="grup-input">
+                    <label for="pesan-klien">Nama Klien / Perusahaan</label>
+                    <input type="text" id="pesan-klien" placeholder="Nama perusahaan / personal">
+                    <small class="pesan-galat"></small>
+                </div>
+                <div class="grup-input">
+                    <label for="pesan-layanan">Jenis Layanan</label>
+                    <select id="pesan-layanan">
+                        <option value="">-- Pilih Layanan DeyuCreative --</option>
+                        <option value="sosmed">Social Media Visuals</option>
+                        <option value="marketing">Marketing Strategy</option>
+                        <option value="panggung">Stage & Event Design</option>
+                        <option value="brand">Brand Identity</option>
+                    </select>
+                    <small class="pesan-galat"></small>
+                </div>
+                <div class="grup-input">
+                    <label for="pesan-detail">Detail Kebutuhan</label>
+                    <textarea id="pesan-detail" rows="4" placeholder="Jelaskan konsep singkat atau kebutuhan proyek Anda..."></textarea>
+                    <small class="pesan-galat"></small>
+                </div>
+                <button type="submit">Kirim Pesanan</button>
+                <div id="pesan-sukses-pesan" class="pesan-sukses sembunyi">Pesanan Anda telah kami terima. Tim DeyuCreative Studio akan segera menghubungi Anda!</div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 DeyuCreative Studio. Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <!-- Menghubungkan berkas JavaScript eksternal -->
+    <script src="dom.js"></script>
+</body>
+</html>
