@@ -77,6 +77,13 @@ main {
 
 .halaman {
     animation: muncul 0.5s ease-in-out;
+}
+
+.halaman h2, .halaman p {
+    text-align: center;
+}
+
+.form-tambah-portofolio h3 {
     text-align: center;
 }
 
