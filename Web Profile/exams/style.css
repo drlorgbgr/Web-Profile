@@ -1,0 +1,208 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.main-header {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.sections-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 320px;
+  flex: 1 1 300px;
+  max-width: 350px;
+}
+
+/* Section 1: Kalkulator Diskon */
+.card-kalkulator h2 {
+  margin-top: 0;
+  color: #1a73e8;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-hitung {
+  width: 100%;
+  padding: 10px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn-hitung:hover {
+  background-color: #1557b0;
+}
+
+.hasil-kalkulator {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #e8f0fe;
+  border-radius: 5px;
+  color: #1967d2;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Section 2: Daftar Tugas */
+.card-todo h2 {
+  margin-top: 0;
+  color: #2e7d32;
+  text-align: center;
+}
+
+.todo-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.todo-input-group input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-tambah {
+  padding: 8px 12px;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-tambah:hover {
+  background-color: #1b5e20;
+}
+
+.list-tugas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.list-tugas li {
+  background-color: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  border: 1px solid #eee;
+}
+
+.btn-hapus {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-hapus:hover {
+  background-color: #9a0007;
+}
+
+/* Section 3: Jam & Stopwatch */
+.card-timer {
+  text-align: center;
+}
+
+.card-timer h2 {
+  margin-top: 0;
+  color: #e65100;
+}
+
+.jam-digital {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+  letter-spacing: 2px;
+}
+
+.garis-pemisah {
+  border: 0;
+  height: 1px;
+  background: #e0e0e0;
+  margin: 15px 0;
+}
+
+.stopwatch-display {
+  font-size: 22px;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.kontrol-stopwatch button {
+  padding: 6px 12px;
+  margin: 0 2px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-size: 13px;
+}
+
+.btn-start { background-color: #2e7d32; }
+.btn-stop { background-color: #d32f2f; }
+.btn-reset { background-color: #f57c00; }

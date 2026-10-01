@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Serbaguna</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="container">
+    <header class="main-header">
+      <h1>Aplikasi Web Serbaguna</h1>
+    </header>
+
+    <div class="sections-wrapper">
+      <!-- Section 1: Kalkulator Diskon -->
+      <section class="card card-kalkulator">
+        <h2>Kalkulator Diskon</h2>
+        <div class="form-group">
+          <label for="harga">Harga Barang (Rp):</label>
+          <input type="number" id="harga" placeholder="Contoh: 100000">
+        </div>
+        <div class="form-group">
+          <label for="diskon">Diskon (%):</label>
+          <input type="number" id="diskon" placeholder="Contoh: 20">
+        </div>
+        <button class="btn-hitung" onclick="hitungDiskon()">Hitung Total</button>
+        <div class="hasil-kalkulator" id="hasilKalkulator">Total: Rp 0</div>
+      </section>
+
+      <!-- Section 2: Daftar Tugas -->
+      <section class="card card-todo">
+        <h2>Daftar Tugas</h2>
+        <div class="todo-input-group">
+          <input type="text" id="inputTugas" placeholder="Tambah tugas baru...">
+          <button class="btn-tambah" onclick="tambahTugas()">Tambah</button>
+        </div>
+        <ul class="list-tugas" id="daftarTugas"></ul>
+      </section>
+
+      <!-- Section 3: Jam & Stopwatch -->
+      <section class="card card-timer">
+        <h2>Jam & Stopwatch</h2>
+        <div class="jam-digital" id="jamDigital">00:00:00</div>
+        
+        <hr class="garis-pemisah">
+
+        <div class="stopwatch-display" id="displayStopwatch">00:00</div>
+        <div class="kontrol-stopwatch">
+          <button class="btn-start" onclick="mulaiStopwatch()">Mulai</button>
+          <button class="btn-stop" onclick="berhentiStopwatch()">Stop</button>
+          <button class="btn-reset" onclick="resetStopwatch()">Reset</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
