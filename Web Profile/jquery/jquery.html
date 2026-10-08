@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praktikum jQuery 1</title>
+    <!-- Memuat pustaka jQuery dari CDN Google -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+    <h2 id="judul-halaman">Ini adalah judul awal</h2>
+    <p class="paragraf-teks">Ini adalah paragraf statis.</p>
+    <button id="tombol-ubah">Ubah Konten</button>
+
+    <script>
+        // Memastikan seluruh struktur HTML (DOM) dimuat sepenuhnya
+        $(document).ready(function() {
+            // Menggunakan .on("click", ...) sebagai pengganti .click()
+            $("#tombol-ubah").click (function() {
+                // Mengubah teks biasa
+                $("#judul-halaman").text("Judul Telah Diubah oleh jQuery!");
+                
+                // Mengubah konten dengan tag HTML
+                $(".paragraf-teks").html("Teks ini ditebalkan menggunakan <b>tag HTML baru</b>.");
+            });
+        });
+    </script>
+</body>
+</html>

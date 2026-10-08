@@ -1,0 +1,146 @@
+/* Reset CSS Dasar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f6fa;
+    color: #2f3640;
+}
+
+/* Desain Header dengan Flexbox */
+header {
+    background-color: #273c75;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+header input {
+    padding: 8px 12px;
+    width: 300px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+}
+
+/* Desain Konten Utama */
+main {
+    padding: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Desain Panel Tambah Buku */
+.panel-admin {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.panel-admin h3 {
+    margin-bottom: 15px;
+    color: #192a56;
+}
+
+#form-tambah-buku {
+    display: flex;
+    gap: 10px;
+}
+
+#form-tambah-buku input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#form-tambah-buku button {
+    padding: 10px 20px;
+    background-color: #44bd32;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+#form-tambah-buku button:hover {
+    background-color: #4cd137;
+}
+
+/* Notifikasi jQuery */
+#pesan-notifikasi {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+    font-weight: bold;
+}
+
+.sukses {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Desain Grid Galeri Buku */
+.koleksi h2 {
+    margin-bottom: 15px;
+    border-bottom: 2px solid #273c75;
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.grid-buku {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+/* Desain Kartu Buku */
+.kartu-buku {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 5px solid #273c75;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.kartu-buku h4 {
+    margin-bottom: 5px;
+    color: #2f3640;
+}
+
+.kartu-buku p {
+    font-size: 0.9rem;
+    color: #7f8fa6;
+    margin-bottom: 15px;
+}
+
+.hapus-buku {
+    background-color: #e84118;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.2s;
+}
+
+.hapus-buku:hover {
+    background-color: #c23616;
+}

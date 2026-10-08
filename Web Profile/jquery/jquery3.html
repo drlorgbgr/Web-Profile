@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praktikum jQuery 3</title>
+    <style>
+        #panel-info {
+            font-family: "Poppins", sans-serif;
+            font-size: 18px;
+            padding: 20px; 
+            text-align: center;
+            border-radius: 10px;
+            background-color: #1b6afc; 
+            color: rgb(220, 255, 19);
+            display: none; /* Disembunyikan di awal */
+        }
+        .tombol { 
+            padding: 10px; 
+            cursor: pointer; 
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+    <button id="tombol-toggle" class="tombol">Tampilkan / Sembunyikan Panel</button>
+    <button id="tombol-pudar" class="tombol">Pudarkan Panel</button>
+
+    <div id="panel-info">
+        <h3>HAYOLOH NGAPAIN</h3>
+        <img src="https://i.pinimg.com/736x/a8/81/0c/a8810c22d38548094b625665cd7ca036.jpg" alt="Wowo" width="200">
+        <p>Aku nak femboy</p>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // 1. Efek Geser (Slide) Otomatis Atas-Bawah
+            $("#tombol-toggle").click (function() {
+                // Parameter "slow" mengatur kecepatan animasi
+                $("#panel-info").slideToggle("medium");
+            });
+
+            // 2. Efek Transparansi (Fade)
+            $("#tombol-pudar").click(function() {
+                $("#panel-info").fadeToggle(500); // 500 ms = 0.5 detik
+            });
+        });
+    </script>
+</body>
+</html>

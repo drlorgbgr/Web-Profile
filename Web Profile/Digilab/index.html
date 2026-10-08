@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiLib - Perpustakaan Digital</title>
+    <!-- Memanggil berkas CSS Eksternal -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Memanggil Pustaka jQuery dari CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo">DigiLib</div>
+        <input type="text" id="cari-buku" placeholder="Ketik judul buku untuk mencari...">
+    </header>
+
+    <main>
+        <!-- Seksi Formulir Penambahan Buku -->
+        <section class="panel-admin">
+            <h3>+ Tambah Koleksi Buku Baru</h3>
+            <form id="form-tambah-buku">
+                <input type="text" id="input-judul" placeholder="Judul Buku (Contoh: Laskar Pelangi)" required>
+                <input type="text" id="input-penulis" placeholder="Nama Penulis" required>
+                <button type="submit">Simpan Buku</button>
+            </form>
+            <div id="pesan-notifikasi"></div>
+        </section>
+
+        <!-- Seksi Galeri Buku -->
+        <section class="koleksi">
+            <h2>Koleksi Tersedia</h2>
+            <div id="rak-buku" class="grid-buku">
+                <!-- Data buku bawaan (statis) -->
+                <div class="kartu-buku">
+                    <h4 class="judul-buku">Pemrograman Web Dasar</h4>
+                    <p class="penulis-buku">Penulis: Tim Akademik</p>
+                    <button class="hapus-buku">Hapus</button>
+                </div>
+                <div class="kartu-buku">
+                    <h4 class="judul-buku">Algoritma &amp; Struktur Data</h4>
+                    <p class="penulis-buku">Penulis: John Doe</p>
+                    <button class="hapus-buku">Hapus</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Memanggil berkas Skrip JS Eksternal -->
+    <script src="script.js"></script>
+</body>
+</html>

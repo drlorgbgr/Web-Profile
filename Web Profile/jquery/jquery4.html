@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praktikum jQuery 4</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+    <h3>Daftar Belanja</h3>
+    <input type="text" id="input-barang" placeholder="Masukkan nama barang">
+    <button id="tambah-barang">Tambahkan</button>
+
+    <ul id="daftar-belanja">
+        <li>Beras <button class="hapus">X</button></li>
+    </ul>
+
+    <script>
+        $(document).ready(function() {
+            // 1. Menambahkan Elemen Baru (Append)
+            $("#tambah-barang").click(function() {
+                // Mengambil nilai teks dan menghapus spasi ekstra di awal/akhir
+                let namaBarang = $("#input-barang").val().trim();
+
+                // Memastikan input tidak kosong
+                if (namaBarang !== "") {
+                    // Menyisipkan elemen HTML baru di akhir list
+                    $("#daftar-belanja").append("<li>" + namaBarang + " <button class='hapus'>X</button></li>");
+                    // Mengosongkan kolom input
+                    $("#input-barang").val("");
+                }
+            });
+
+            // 2. Delegasi Peristiwa (Event Delegation)
+            // Menempelkan event listener pada induk (<ul>) untuk menangani tombol .hapus yang baru dibuat
+            $("#daftar-belanja").on("click", ".hapus", function() {
+                $(this).parent().remove();
+            });
+        });
+    </script>
+</body>
+</html>
