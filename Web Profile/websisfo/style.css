@@ -1,0 +1,56 @@
+/* Mengatur font agar lebih bersih */  
+body {  
+  font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif;  
+  scroll-behavior: smooth;  
+}  
+  
+/* --- Desain Bilah Navigasi --- */  
+.transparan-awal {  
+  background-color: transparent !important;  
+  transition: background-color 0.4s ease, padding 0.4s ease;  
+  padding-top: 20px;  
+  padding-bottom: 20px;  
+}  
+  
+.navbar-scrolled {  
+  background-color: #0a192f !important; /* Warna biru navy akademis gelap */  
+  padding-top: 10px;  
+  padding-bottom: 10px;  
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);  
+}  
+  
+/* --- Desain Beranda (Hero Section) --- */  
+.hero {  
+  /* Gradien gelap dengan latar gambar perpustakaan/kampus */  
+  background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(15, 32, 67, 0.85)), url('https://picsum.photos/id/20/1920/1080') center/cover;  
+  height: 100vh;  
+  min-height: 500px;  
+}  
+  
+/* --- Dekorasi Estetika --- */  
+.garis-bawah {  
+  width: 60px;  
+  height: 4px;  
+  background-color: #0056b3; /* Warna biru aksen prodi */  
+  border-radius: 2px;  
+}  
+  
+/* --- Efek Interaktif (Hover) --- */  
+.efek-hover {  
+  transition: transform 0.3s ease, box-shadow 0.3s ease;  
+}  
+  
+.efek-hover:hover {  
+  transform: translateY(-10px);  
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;  
+}  
+  
+/* Animasi gambar portofolio */  
+.item-portofolio img {  
+  transition: transform 0.3s;  
+  cursor: pointer;  
+}  
+  
+.item-portofolio img:hover {  
+  transform: scale(1.05);  
+}
