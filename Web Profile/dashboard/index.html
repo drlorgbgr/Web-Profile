@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard pembelian dan penjualan untuk praktikum pemrograman web.">
+  <title>Dashboard Pembelian & Penjualan | Praktikum Pemrograman Web Dasar</title>
+
+  <!-- Framework Bootstrap dipertahankan untuk dashboard penjualan. -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous">
+
+  <!-- Framework Tailwind dipertahankan untuk dashboard pembelian. -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <style>
+
+    /* Variabel CSS memudahkan pengubahan warna pada seluruh halaman. */
+    :root {
+      --warna-utama: #145f78;
+      --warna-gelap: #102b45;
+      --warna-latar: #f4f7fb;
+      --warna-teks: #193047;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--warna-latar);
+      color: var(--warna-teks);
+    }
+
+    /* Sidebar: panel navigasi di bagian kiri pada layar besar. */
+    .sidebar {
+      width: 245px;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #112b45 0%, #173d59 100%);
+      color: #fff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 28px 17px;
+      z-index: 20;
+    }
+    .sidebar .brand-icon {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      background: #2d7791;
+      font-size: 22px;
+    }
+    .sidebar .menu-link {
+      color: #ccdae4;
+      text-decoration: none;
+      padding: 12px 15px;
+      margin-bottom: 6px;
+      border-radius: 11px;
+      display: block;
+      transition: background .2s;
+    }
+    .sidebar .menu-link:hover,
+    .sidebar .menu-link.active {
+      background: #2a5875;
+      color: white;
+    }
+    .sidebar-note {
+      border: 1px solid #42647a;
+      border-radius: 15px;
+      padding: 15px;
+      background: #ffffff0d;
+    }
+
+    /* Konten digeser ke kanan agar tidak tertutup oleh sidebar. */
+    .konten-utama {
+      margin-left: 245px;
+      padding: 28px 32px;
+      max-width: 1800px;
+    }
+    .topbar {
+      background: #fff;
+      border: 1px solid #e8eef4;
+      border-radius: 18px;
+      padding: 20px 23px;
+      box-shadow: 0 6px 20px #16283b08;
+    }
+    .label-kecil { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+    .judul-halaman { font-weight: 750; letter-spacing: -.03em; }
+    .panel {
+      background: #fff;
+      border: 1px solid #e8eef4;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px #16283b08;
+    }
+    .kartu-statistik {
+      height: 100%;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kartu-statistik .nilai { font-size: clamp(1.3rem, 2vw, 1.8rem); font-weight: 780; }
+    .kartu-statistik .ikon-kartu {
+      width: 48px;
+      height: 48px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+    }
+    .ikon-biru { background: #e6f2ff; }
+    .ikon-hijau { background: #e1f6ef; }
+    .ikon-ungu { background: #efe9ff; }
+    .ikon-jingga { background: #fff0dc; }
+    .teks-muted { color: #6a7f91; }
+    .grafik-container { height: 310px; position: relative; }
+    .table th { color: #607485; font-size: .85rem; font-weight: 650; }
+    .table td { vertical-align: middle; }
+    .table thead { background: #f8fafc; }
+    .tag-kategori { background: #e8f4f8; color: #11607b; font-weight: 600; }
+    .form-control:focus, .form-select:focus { border-color: #4aa0b6; box-shadow: 0 0 0 .2rem #38a3b51a; }
+    .btn-utama { background: var(--warna-utama); border-color: var(--warna-utama); color: #fff; }
+    .btn-utama:hover { background: #0f4e63; border-color: #0f4e63; color: #fff; }
+
+    /* Media query: pada layar kecil sidebar menjadi header sederhana. */
+    @media (max-width: 991px) {
+      .sidebar { position: static; width: 100%; min-height: unset; padding: 16px 20px; }
+      .sidebar nav, .sidebar-note { display: none; }
+      .konten-utama { margin-left: 0; padding: 18px 14px; }
+      .topbar { padding: 18px; }
+      .grafik-container { height: 260px; }
+    }
+  
+    /* Navigasi gabungan dan penyesuaian posisi sidebar kedua dashboard. */
+    .pilih-dashboard {
+      position: relative;
+      z-index: 60;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .pilih-dashboard button {
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 9px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #fff;
+      color: #334155;
+    }
+    .pilih-dashboard button.aktif {
+      background: #334155;
+      border-color: #334155;
+      color: #fff;
+    }
+    #panel-pembelian #beli-sidebar,
+    #panel-penjualan .sidebar {
+      top: 54px !important;
+      height: calc(100vh - 54px);
+      min-height: 0;
+    }
+    #panel-pembelian #beli-overlaySidebar { z-index: 30; }
+    @media (max-width: 991px) {
+      #panel-penjualan .sidebar {
+        top: 0 !important;
+        height: auto;
+        min-height: unset;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="pilih-dashboard" aria-label="Pilih dashboard">
+    <button type="button" id="pilih-pembelian" class="aktif" aria-pressed="true">Dashboard Pembelian</button>
+    <button type="button" id="pilih-penjualan" aria-pressed="false">Dashboard Penjualan</button>
+  </nav>
+
+  <div id="panel-pembelian">
+
+  <!-- ===================== A. SIDEBAR / NAVIGASI ===================== -->
+  <!-- [04] Sidebar tersembunyi di mobile (translate-x-full ke kiri) dan muncul
+       permanen pada layar >= lg (lg:translate-x-0). -->
+  <aside id="beli-sidebar" aria-label="Navigasi dashboard"
+    class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col bg-slate-900 px-5 py-7 text-white shadow-2xl transition-transform duration-300 lg:translate-x-0">
+
+    <div class="mb-10 flex items-center gap-3 px-2">
+      <div class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-indigo-500 text-2xl font-semibold text-white">▦</div>
+      <div>
+        <div class="text-lg font-bold tracking-tight">SI Pembelian</div>
+        <div class="text-xs text-slate-400">Modul pembelian</div>
+      </div>
+    </div>
+
+    <!-- [05] class hover:bg-slate-800 mengatur warna saat pointer di atas tautan. -->
+    <nav class="space-y-1.5" aria-label="Menu utama">
+      <p class="mb-3 px-3 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Menu utama</p>
+      <a href="#beli-ringkasan" class="beli-tautan-menu flex items-center gap-3 rounded-xl bg-indigo-500/15 px-4 py-3 font-semibold text-indigo-300 transition-colors hover:bg-slate-800"><span aria-hidden="true">◫</span> Ringkasan</a>
+      <a href="#beli-grafik" class="beli-tautan-menu flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"><span aria-hidden="true">▥</span> Grafik Pembelian</a>
+      <a href="#beli-transaksi" class="beli-tautan-menu flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"><span aria-hidden="true">☷</span> Data Transaksi</a>
+      <a href="#beli-petunjuk" class="beli-tautan-menu flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"><span aria-hidden="true">ⓘ</span> Petunjuk</a>
+    </nav>
+
+    <div class="mt-auto rounded-2xl border border-slate-700 bg-slate-800/80 p-4">
+      <p class="mb-1 text-sm font-semibold text-white">Mode pembelajaran</p>
+      <p class="text-xs leading-relaxed text-slate-400">HTML + Tailwind CSS + JavaScript + jQuery + Chart.js</p>
+      <div class="mt-3 inline-flex rounded-full bg-indigo-500/15 px-3 py-1 text-[11px] font-semibold text-indigo-300">Data simulasi 2026</div>
+    </div>
+  </aside>
+
+  <!-- [06] Overlay untuk menutupi konten saat sidebar mobile dibuka. -->
+  <div id="beli-overlaySidebar" class="fixed inset-0 z-30 hidden bg-slate-950/60 lg:hidden" aria-hidden="true"></div>
+
+  <!-- ===================== B. KONTEN UTAMA ===================== -->
+  <!-- [07] lg:ml-64 = memberi margin kiri sebesar 16rem saat sidebar permanen. -->
+  <main class="min-h-screen px-4 pb-10 pt-5 sm:px-6 lg:ml-64 lg:px-9 lg:pt-8">
+    <div class="mx-auto max-w-7xl">
+      <!-- Tombol menu tampil pada mobile, hilang pada desktop. -->
+      <div class="mb-4 flex items-center justify-between lg:hidden">
+        <div class="flex items-center gap-2 text-sm font-bold text-slate-700"><span class="text-xl text-indigo-600">▦</span> SI Pembelian</div>
+        <button id="beli-btnMenu" type="button" aria-label="Buka navigasi" aria-expanded="false" aria-controls="beli-sidebar"
+          class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">☰ Menu</button>
+      </div>
+
+      <!-- [08] Header menggunakan utility classes, bukan .card atau .container Bootstrap. -->
+      <header id="beli-ringkasan" class="mb-6 rounded-3xl border border-slate-200 bg-white px-5 py-6 shadow-sm sm:px-7 sm:py-7">
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p class="mb-2 text-xs font-bold uppercase tracking-[0.15em] text-indigo-600">Dashboard pembelian • 2026</p>
+            <h1 class="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">Ringkasan Pembelian</h1>
+            <p class="mt-2 text-sm text-slate-500">Pencatatan pengadaan stok dari pemasok pada toko perlengkapan komputer.</p>
+          </div>
+          <button id="beli-btnBukaModal" type="button"
+            class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <span class="text-lg leading-none" aria-hidden="true">+</span> Tambah Transaksi
+          </button>
+        </div>
+      </header>
+
+      <!-- [09] Tailwind grid: satu kolom default, tiga kolom mulai breakpoint md. -->
+      <section aria-label="Filter transaksi" class="mb-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <div class="grid gap-4 md:grid-cols-12 md:items-end">
+          <div class="md:col-span-4">
+            <label for="beli-filterBulan" class="mb-2 block text-sm font-semibold text-slate-700">Pilih bulan</label>
+            <select id="beli-filterBulan" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+              <option value="">Semua bulan</option>
+              <option value="01">Januari</option><option value="02">Februari</option>
+              <option value="03">Maret</option><option value="04">April</option>
+              <option value="05">Mei</option><option value="06">Juni</option>
+              <option value="07">Juli</option><option value="08">Agustus</option>
+              <option value="09">September</option><option value="10">Oktober</option>
+              <option value="11">November</option><option value="12">Desember</option>
+            </select>
+          </div>
+          <div class="md:col-span-5">
+            <label for="beli-cariTransaksi" class="mb-2 block text-sm font-semibold text-slate-700">Cari produk, pemasok, atau kategori</label>
+            <input id="beli-cariTransaksi" type="search" placeholder="Contoh: mouse atau Mitra Komputer..."
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+          </div>
+          <div class="md:col-span-3">
+            <button id="beli-btnResetFilter" type="button" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100">Reset Filter</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- [10] grid-cols-1 -> sm:grid-cols-2 -> xl:grid-cols-4. -->
+      <section aria-label="Statistik pembelian" class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <!-- [11] ID unik menjadi sasaran jQuery ketika memperbarui nilainya. -->
+        <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div class="mb-5 flex items-start justify-between gap-2"><span class="text-sm font-semibold text-slate-500">Total Biaya Pembelian</span><span class="grid h-11 w-11 place-items-center rounded-2xl bg-sky-100 text-base font-bold text-sky-700">Rp</span></div>
+          <p id="beli-nilaiPembelian" class="break-words text-2xl font-extrabold tracking-tight text-slate-900">Rp0</p>
+          <p class="mt-2 text-xs text-slate-400">Total biaya pengadaan hasil filter</p>
+        </article>
+        <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div class="mb-5 flex items-start justify-between gap-2"><span class="text-sm font-semibold text-slate-500">Jumlah Transaksi</span><span class="grid h-11 w-11 place-items-center rounded-2xl bg-emerald-100 text-xl text-emerald-700">▤</span></div>
+          <p id="beli-nilaiTransaksi" class="text-2xl font-extrabold tracking-tight text-slate-900">0</p>
+          <p class="mt-2 text-xs text-slate-400">Transaksi yang cocok</p>
+        </article>
+        <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div class="mb-5 flex items-start justify-between gap-2"><span class="text-sm font-semibold text-slate-500">Unit Dibeli</span><span class="grid h-11 w-11 place-items-center rounded-2xl bg-violet-100 text-xl text-violet-700">▣</span></div>
+          <p id="beli-nilaiUnit" class="text-2xl font-extrabold tracking-tight text-slate-900">0</p>
+          <p class="mt-2 text-xs text-slate-400">Jumlah unit yang dibeli dari pemasok</p>
+        </article>
+        <article class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div class="mb-5 flex items-start justify-between gap-2"><span class="text-sm font-semibold text-slate-500">Rata-rata Pembelian</span><span class="grid h-11 w-11 place-items-center rounded-2xl bg-amber-100 text-xl text-amber-700">↗</span></div>
+          <p id="beli-nilaiRataRata" class="break-words text-2xl font-extrabold tracking-tight text-slate-900">Rp0</p>
+          <p class="mt-2 text-xs text-slate-400">Total pembelian ÷ jumlah transaksi</p>
+        </article>
+      </section>
+
+      <!-- ===================== C. GRAFIK DAN TABEL ===================== -->
+      <section id="beli-grafik" class="mb-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div><h2 class="text-lg font-bold text-slate-900">Grafik Nilai Pembelian per Bulan</h2><p class="mt-1 text-sm text-slate-500">Mengikuti filter bulan dan pencarian produk/pemasok.</p></div>
+          <span class="w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-500">Januari–Desember 2026</span>
+        </div>
+        <!-- [12] Tinggi chart ditentukan dengan kelas h-64 sm:h-80.
+             Canvas akan digambar oleh library Chart.js. -->
+        <div class="relative h-64 w-full sm:h-80"><canvas id="beli-grafikPembelian" role="img" aria-label="Grafik batang nilai pembelian bulanan"></canvas></div>
+      </section>
+
+      <section id="beli-transaksi" class="mb-6 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+        <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div><h2 class="text-lg font-bold text-slate-900">Daftar Transaksi</h2><p class="mt-1 text-sm text-slate-500"><span id="beli-jumlahBaris">0</span> transaksi ditampilkan.</p></div>
+          <button id="beli-btnResetData" type="button" class="rounded-xl border border-rose-200 bg-white px-4 py-2.5 text-sm font-semibold text-rose-600 transition-colors hover:bg-rose-50">Kembalikan Data Contoh</button>
+        </div>
+
+        <!-- [13] Area informasi: pesan baru tampak setelah aksi tambah/hapus/reset. -->
+        <div id="beli-notifikasi" role="status" aria-live="polite" class="mb-4 hidden rounded-xl border px-4 py-3 text-sm"></div>
+
+        <!-- [14] overflow-x-auto memberi kemampuan scroll pada tabel di HP. -->
+        <div class="overflow-x-auto rounded-xl border border-slate-200">
+          <table class="min-w-[980px] w-full text-left text-sm">
+            <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+              <tr>
+                <th scope="col" class="whitespace-nowrap px-4 py-4 font-semibold">Tanggal</th>
+                <th scope="col" class="px-4 py-4 font-semibold">Produk</th>
+                <th scope="col" class="px-4 py-4 font-semibold">Pemasok</th>
+                <th scope="col" class="px-4 py-4 font-semibold">Kategori</th>
+                <th scope="col" class="px-4 py-4 text-center font-semibold">Jumlah</th>
+                <th scope="col" class="px-4 py-4 text-right font-semibold">Harga Beli</th>
+                <th scope="col" class="px-4 py-4 text-right font-semibold">Subtotal</th>
+                <th scope="col" class="px-4 py-4 text-center font-semibold">Aksi</th>
+              </tr>
+            </thead>
+            <!-- [15] tbody kosong; jQuery membuat <tr> baru berdasarkan data. -->
+            <tbody id="beli-tabelTransaksi" class="divide-y divide-slate-100 bg-white"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="beli-petunjuk" class="mb-7 rounded-3xl border border-indigo-100 bg-indigo-50 p-5 sm:p-7">
+        <h2 class="text-lg font-bold text-indigo-900">Petunjuk untuk Mahasiswa</h2>
+        <p class="mt-2 text-sm leading-7 text-indigo-900/80">Coba ubah filter bulan, cari nama pemasok, tambahkan pembelian, lalu perhatikan bagaimana kartu statistik, grafik, dan tabel berubah bersama-sama. Setelah itu, gabungkan halaman ini dengan Dashboard Penjualan (Bootstrap) dalam <strong>satu file HTML</strong> sebagai tugas integrasi. Bandingkan susunan kelas <code class="rounded bg-white px-1.5 py-1">grid</code>, <code class="rounded bg-white px-1.5 py-1">p-5</code>, dan <code class="rounded bg-white px-1.5 py-1">rounded-3xl</code> dengan versi Bootstrap.</p>
+        <p class="mt-3 text-xs text-indigo-800/70">Penyimpanan memakai kunci <code>dashboard-praktikum-pembelian-tailwind-2026-v1</code> sehingga tidak menimpa data penjualan. Angka di halaman ini adalah <strong>biaya pembelian persediaan</strong>, bukan laba.</p>
+      </section>
+      <footer class="text-center text-xs text-slate-400">Praktikum Pemrograman Web Dasar • Sistem Informasi • 2026</footer>
+    </div>
+  </main>
+
+  <!-- ===================== D. MODAL FORM TAILWIND ===================== -->
+  <!-- [16] Modal dibuat dengan HTML + Tailwind; interaksi buka/tutup memakai jQuery.
+       Tidak ada Bootstrap JS maupun class Bootstrap di halaman ini. -->
+  <div id="beli-modalTambah" role="dialog" aria-modal="true" aria-labelledby="beli-judulModal" aria-hidden="true"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 p-4 backdrop-blur-[2px]">
+    <div id="beli-isiModal" class="max-h-[92vh] w-full max-w-xl overflow-y-auto rounded-3xl bg-white shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+        <div><h2 id="beli-judulModal" class="text-lg font-extrabold text-slate-900">Tambah Transaksi</h2><p class="mt-1 text-xs text-slate-500">Masukkan barang yang dibeli dari pemasok.</p></div>
+        <button type="button" class="beli-btn-tutup-modal rounded-lg px-3 py-2 text-xl text-slate-500 transition hover:bg-slate-100" aria-label="Tutup dialog">×</button>
+      </div>
+
+      <!-- [17] Validasi menggunakan atribut required/min/max bawaan HTML. -->
+      <form id="beli-formTambah">
+        <div class="grid grid-cols-1 gap-4 px-6 py-6 sm:grid-cols-2">
+          <div>
+            <label for="beli-inputTanggal" class="mb-2 block text-sm font-semibold">Tanggal</label>
+            <input id="beli-inputTanggal" type="date" min="2026-01-01" max="2026-12-31" value="2026-11-05" required
+              class="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+          </div>
+          <div>
+            <label for="beli-inputKategori" class="mb-2 block text-sm font-semibold">Kategori</label>
+            <select id="beli-inputKategori" required class="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+              <option value="">Pilih kategori</option>
+              <option value="Aksesoris">Aksesoris</option><option value="Perangkat">Perangkat</option><option value="Penyimpanan">Penyimpanan</option>
+            </select>
+          </div>
+          <div class="sm:col-span-2">
+            <label for="beli-inputProduk" class="mb-2 block text-sm font-semibold">Nama Produk</label>
+            <input id="beli-inputProduk" type="text" maxlength="80" placeholder="Contoh: Flashdisk 64 GB" required
+              class="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+          </div>
+          <!-- [17a] Pemasok membedakan transaksi pembelian dari penjualan. -->
+          <div class="sm:col-span-2">
+            <label for="beli-inputPemasok" class="mb-2 block text-sm font-semibold">Nama Pemasok / Supplier</label>
+            <input id="beli-inputPemasok" type="text" maxlength="100" placeholder="Contoh: CV Mitra Komputer" required
+              class="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+          </div>
+          <div>
+            <label for="beli-inputJumlah" class="mb-2 block text-sm font-semibold">Jumlah Unit</label>
+            <input id="beli-inputJumlah" type="number" min="1" step="1" required placeholder="Contoh: 2"
+              class="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+          </div>
+          <div>
+            <label for="beli-inputHarga" class="mb-2 block text-sm font-semibold">Harga Beli (Rp)</label>
+            <input id="beli-inputHarga" type="number" min="1" step="1" required placeholder="Contoh: 65000"
+              class="w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-sm outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10">
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-3 border-t border-slate-100 px-6 py-5">
+          <button type="button" class="beli-btn-tutup-modal rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">Batal</button>
+          <button type="submit" class="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-indigo-700">Simpan Pembelian</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================== E. LIBRARY JAVASCRIPT ===================== -->
+  <!-- [18] Hanya jQuery dan Chart.js: Bootstrap sengaja tidak dimuat. -->
+  
+  
+
+  <!-- ===================== F. LOGIKA JAVASCRIPT DAN JQUERY ===================== -->
+  
+
+  </div>
+
+  <div id="panel-penjualan" style="display:none">
+
+  <!-- ===================== BAGIAN A: STRUKTUR HTML ===================== -->
+
+  <!-- [05] aside dipakai untuk bagian navigasi samping. -->
+  <aside class="sidebar" aria-label="Navigasi dashboard">
+    <div class="d-flex align-items-center gap-3 mb-5">
+      <div class="brand-icon" aria-hidden="true">▦</div>
+      <div>
+        <div class="fw-bold fs-5">SI Dashboard</div>
+        <div class="small opacity-75">Proyek praktikum</div>
+      </div>
+    </div>
+
+    <!-- [06] Tautan #id mengarahkan browser ke elemen yang memiliki id tersebut. -->
+    <nav>
+      <div class="small opacity-50 text-uppercase px-3 mb-3">Menu utama</div>
+      <a class="menu-link active" href="#ringkasan">▤ &nbsp; Ringkasan</a>
+      <a class="menu-link" href="#grafik">▥ &nbsp; Grafik Penjualan</a>
+      <a class="menu-link" href="#transaksi">≡ &nbsp; Data Transaksi</a>
+      <a class="menu-link" href="#petunjuk">ⓘ &nbsp; Petunjuk</a>
+    </nav>
+
+    <div class="sidebar-note mt-5">
+      <div class="fw-semibold mb-1">Mode pembelajaran</div>
+      <div class="small opacity-75">HTML + CSS + Bootstrap + JavaScript + jQuery + Chart.js</div>
+    </div>
+  </aside>
+
+  <!-- [07] main menyatakan konten utama halaman. -->
+  <main class="konten-utama">
+    <header class="topbar mb-4" id="ringkasan">
+      <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
+        <div>
+          <div class="label-kecil text-primary fw-semibold mb-2">Dashboard penjualan • 2026</div>
+          <h1 class="judul-halaman h3 mb-1">Ringkasan Penjualan</h1>
+          <p class="mb-0 teks-muted">Simulasi data toko perlengkapan komputer untuk praktikum.</p>
+        </div>
+        <!-- [08] data-bs-toggle menampilkan modal Bootstrap sesuai target. -->
+        <button type="button" class="btn btn-utama px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalTambah">
+          + Tambah Transaksi
+        </button>
+      </div>
+    </header>
+
+    <!-- [09] Filter memanfaatkan input HTML dan event jQuery. -->
+    <section class="panel p-3 p-md-4 mb-4" aria-label="Filter transaksi">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label for="filterBulan" class="form-label fw-semibold small">Pilih bulan</label>
+          <select id="filterBulan" class="form-select">
+            <option value="">Semua bulan</option>
+            <option value="01">Januari</option><option value="02">Februari</option>
+            <option value="03">Maret</option><option value="04">April</option>
+            <option value="05">Mei</option><option value="06">Juni</option>
+            <option value="07">Juli</option><option value="08">Agustus</option>
+            <option value="09">September</option><option value="10">Oktober</option>
+            <option value="11">November</option><option value="12">Desember</option>
+          </select>
+        </div>
+        <div class="col-md-5">
+          <label for="cariTransaksi" class="form-label fw-semibold small">Cari produk atau kategori</label>
+          <input type="search" id="cariTransaksi" class="form-control" placeholder="Contoh: mouse atau aksesoris...">
+        </div>
+        <div class="col-md-3">
+          <button id="btnResetFilter" type="button" class="btn btn-outline-secondary w-100">Reset Filter</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- [10] Bootstrap grid: row dan col membentuk tata letak responsif. -->
+    <section class="row g-3 mb-4" aria-label="Statistik penjualan">
+      <div class="col-sm-6 col-xl-3">
+        <div class="panel kartu-statistik">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="small teks-muted fw-semibold">Total Omzet</div>
+            <div class="ikon-kartu ikon-biru" aria-hidden="true">Rp</div>
+          </div>
+          <!-- [11] id dipakai sebagai target jQuery ketika memperbarui teks. -->
+          <div id="nilaiOmzet" class="nilai">Rp0</div>
+          <div class="small teks-muted mt-2">Berdasarkan hasil filter</div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="panel kartu-statistik">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="small teks-muted fw-semibold">Jumlah Transaksi</div>
+            <div class="ikon-kartu ikon-hijau" aria-hidden="true">▤</div>
+          </div>
+          <div id="nilaiTransaksi" class="nilai">0</div>
+          <div class="small teks-muted mt-2">Transaksi yang cocok</div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="panel kartu-statistik">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="small teks-muted fw-semibold">Unit Terjual</div>
+            <div class="ikon-kartu ikon-ungu" aria-hidden="true">▣</div>
+          </div>
+          <div id="nilaiUnit" class="nilai">0</div>
+          <div class="small teks-muted mt-2">Jumlah barang keseluruhan</div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="panel kartu-statistik">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="small teks-muted fw-semibold">Rata-rata Transaksi</div>
+            <div class="ikon-kartu ikon-jingga" aria-hidden="true">↗</div>
+          </div>
+          <div id="nilaiRataRata" class="nilai">Rp0</div>
+          <div class="small teks-muted mt-2">Omzet ÷ jumlah transaksi</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="grafik" class="panel p-3 p-md-4 mb-4">
+      <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap mb-3">
+        <div>
+          <h2 class="h5 fw-bold mb-1">Grafik Omzet per Bulan</h2>
+          <p class="small teks-muted mb-0">Grafik menyesuaikan filter bulan dan kata kunci.</p>
+        </div>
+        <span class="badge rounded-pill text-bg-light border px-3 py-2">Januari–Desember 2026</span>
+      </div>
+      <!-- [12] Canvas adalah area gambar yang dipakai oleh Chart.js. -->
+      <div class="grafik-container"><canvas id="grafikPenjualan" aria-label="Grafik batang omzet per bulan" role="img"></canvas></div>
+    </section>
+
+    <section id="transaksi" class="panel p-3 p-md-4 mb-4">
+      <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap mb-3">
+        <div>
+          <h2 class="h5 fw-bold mb-1">Daftar Transaksi</h2>
+          <p class="small teks-muted mb-0"><span id="jumlahBaris">0</span> transaksi ditampilkan.</p>
+        </div>
+        <!-- [13] Tombol mengembalikan data simulasi awal (bukan server). -->
+        <button type="button" id="btnResetData" class="btn btn-sm btn-outline-danger">Kembalikan Data Contoh</button>
+      </div>
+      <!-- [14] alert ini diisi melalui JavaScript setelah tindakan pengguna. -->
+      <div id="notifikasi" class="alert d-none" role="status" aria-live="polite"></div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Tanggal</th><th>Produk</th><th>Kategori</th>
+              <th class="text-center">Jumlah</th><th class="text-end">Harga Satuan</th>
+              <th class="text-end">Subtotal</th><th class="text-center">Aksi</th>
+            </tr>
+          </thead>
+          <!-- [15] tbody sengaja kosong: jQuery akan menghasilkan barisnya. -->
+          <tbody id="tabelTransaksi"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="petunjuk" class="panel p-3 p-md-4 mb-4">
+      <h2 class="h5 fw-bold mb-2">Petunjuk untuk Mahasiswa</h2>
+      <p class="mb-2">Ubah pilihan bulan, cari produk, tambahkan transaksi, lalu amati perubahan pada kartu, grafik, dan tabel secara bersamaan.</p>
+      <p class="small teks-muted mb-0">Data ini hanya simulasi. Data disimpan di <code>localStorage</code> browser, bukan di database/server.</p>
+    </section>
+    <footer class="text-center teks-muted small pb-3">Contoh Praktikum Pemrograman Web Dasar • Tahun 2026</footer>
+  </main>
+
+  <!-- ===================== BAGIAN B: FORM MODAL ===================== -->
+  <!-- [16] Modal adalah kotak dialog yang disediakan oleh Bootstrap. -->
+  <div class="modal fade" id="modalTambah" tabindex="-1" aria-labelledby="judulModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5 fw-bold" id="judulModal">Tambah Transaksi</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <!-- [17] required, min, dan max adalah validasi bawaan HTML. -->
+        <form id="formTambah" novalidate>
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label for="inputTanggal" class="form-label">Tanggal</label>
+                <input type="date" id="inputTanggal" class="form-control"
+                       min="2026-01-01" max="2026-12-31" value="2026-11-05" required>
+                <div class="invalid-feedback">Masukkan tanggal pada tahun 2026.</div>
+              </div>
+              <div class="col-sm-6">
+                <label for="inputKategori" class="form-label">Kategori</label>
+                <select id="inputKategori" class="form-select" required>
+                  <option value="">Pilih kategori</option>
+                  <option value="Aksesoris">Aksesoris</option>
+                  <option value="Perangkat">Perangkat</option>
+                  <option value="Penyimpanan">Penyimpanan</option>
+                </select>
+                <div class="invalid-feedback">Pilih kategori produk.</div>
+              </div>
+              <div class="col-12">
+                <label for="inputProduk" class="form-label">Nama Produk</label>
+                <input type="text" id="inputProduk" class="form-control" maxlength="80"
+                       placeholder="Contoh: Flashdisk 64 GB" required>
+                <div class="invalid-feedback">Isi nama produk.</div>
+              </div>
+              <div class="col-sm-6">
+                <label for="inputJumlah" class="form-label">Jumlah Unit</label>
+                <input type="number" id="inputJumlah" class="form-control" min="1" step="1" required>
+                <div class="invalid-feedback">Jumlah minimal 1 unit.</div>
+              </div>
+              <div class="col-sm-6">
+                <label for="inputHarga" class="form-label">Harga Satuan (Rp)</label>
+                <input type="number" id="inputHarga" class="form-control" min="1" step="1" required>
+                <div class="invalid-feedback">Harga minimal Rp1.</div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-utama">Simpan Transaksi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== BAGIAN C: LIBRARY JAVASCRIPT ===================== -->
+  <!-- [18] Bootstrap JS mengaktifkan interaksi modal. -->
+  
+  <!-- [19] jQuery mempersingkat pemilihan elemen dan penanganan event. -->
+  
+  <!-- [20] Chart.js bertugas menggambar grafik. -->
+  
+
+  <!-- ===================== BAGIAN D: LOGIKA APLIKASI ===================== -->
+  
+
+  </div>
+
+  <!-- Library bersama: jQuery dan Chart.js dipakai kedua dashboard. -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+
+  <!-- Logika asli dashboard pembelian (Tailwind + jQuery + Chart.js). -->
+  <script>
+
+    // [19] Scope lokal $(function() {...}) mencegah nama variabel berbenturan
+    //      ketika script penjualan Bootstrap diletakkan di file HTML yang sama.
+    $(function () {
+
+      // [20] Array of objects = contoh pembelian stok dari pemasok.
+      //      hargaBeli adalah modal unit; jumlah x hargaBeli = total biaya pembelian.
+      const dataAwal = [
+        { id: 1,  tanggal: "2026-01-08", nama: "Mouse Wireless",     kategori: "Aksesoris",   pemasok: "CV Mitra Komputer",  jumlah: 10, hargaBeli: 62000 },
+        { id: 2,  tanggal: "2026-01-23", nama: "Keyboard Mechanical", kategori: "Aksesoris",   pemasok: "PT Sumber Digital", jumlah: 5,  hargaBeli: 325000 },
+        { id: 3,  tanggal: "2026-02-05", nama: "Flashdisk 64 GB",    kategori: "Penyimpanan", pemasok: "CV Mitra Komputer",  jumlah: 20, hargaBeli: 68000 },
+        { id: 4,  tanggal: "2026-03-02", nama: "SSD 512 GB",         kategori: "Penyimpanan", pemasok: "PT Sumber Digital", jumlah: 8,  hargaBeli: 490000 },
+        { id: 5,  tanggal: "2026-03-18", nama: "Mousepad",           kategori: "Aksesoris",   pemasok: "UD Jaya Periferal", jumlah: 30, hargaBeli: 21000 },
+        { id: 6,  tanggal: "2026-04-07", nama: "Webcam Full HD",     kategori: "Perangkat",   pemasok: "PT Sumber Digital", jumlah: 6,  hargaBeli: 270000 },
+        { id: 7,  tanggal: "2026-05-11", nama: "Headset",            kategori: "Aksesoris",   pemasok: "UD Jaya Periferal", jumlah: 12, hargaBeli: 130000 },
+        { id: 8,  tanggal: "2026-06-01", nama: "USB Hub",            kategori: "Aksesoris",   pemasok: "CV Mitra Komputer",  jumlah: 15, hargaBeli: 51000 },
+        { id: 9,  tanggal: "2026-07-16", nama: "Monitor 24 Inci",    kategori: "Perangkat",   pemasok: "PT Sumber Digital", jumlah: 4,  hargaBeli: 1320000 },
+        { id: 10, tanggal: "2026-08-10", nama: "SSD 1 TB",           kategori: "Penyimpanan", pemasok: "PT Sumber Digital", jumlah: 7,  hargaBeli: 870000 },
+        { id: 11, tanggal: "2026-09-04", nama: "Keyboard Wireless",  kategori: "Aksesoris",   pemasok: "CV Mitra Komputer",  jumlah: 9,  hargaBeli: 175000 },
+        { id: 12, tanggal: "2026-10-08", nama: "Flashdisk 128 GB",   kategori: "Penyimpanan", pemasok: "CV Mitra Komputer",  jumlah: 18, hargaBeli: 110000 },
+        { id: 13, tanggal: "2026-10-19", nama: "Laptop Stand",       kategori: "Aksesoris",   pemasok: "UD Jaya Periferal", jumlah: 8,  hargaBeli: 155000 },
+        { id: 14, tanggal: "2026-11-02", nama: "Mouse Wireless",     kategori: "Aksesoris",   pemasok: "CV Mitra Komputer",  jumlah: 12, hargaBeli: 62000 },
+        { id: 15, tanggal: "2026-11-05", nama: "Webcam Full HD",     kategori: "Perangkat",   pemasok: "PT Sumber Digital", jumlah: 5,  hargaBeli: 270000 }
+      ];
+
+      // [21] localStorage menyimpan data di browser secara lokal, BUKAN database.
+      // Kunci pembelian berbeda dari penjualan Bootstrap; data keduanya harus terpisah.
+      const KUNCI_DATA = "dashboard-praktikum-pembelian-tailwind-2026-v1";
+      const namaBulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+                         "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
+      // [22] Mengambil data tersimpan atau memakai salinan data contoh.
+      function muatData() {
+        try {
+          const tersimpan = localStorage.getItem(KUNCI_DATA);
+          if (tersimpan !== null) {
+            const hasil = JSON.parse(tersimpan);
+            if (Array.isArray(hasil)) return hasil;
+          }
+        } catch (error) {
+          console.warn("Penyimpanan browser tidak tersedia:", error);
+        }
+        return dataAwal.map(item => ({ ...item }));
+      }
+      let transaksi = muatData();
+
+      // [23] JSON.stringify mengubah array menjadi string untuk disimpan.
+      function simpanData() {
+        try { localStorage.setItem(KUNCI_DATA, JSON.stringify(transaksi)); }
+        catch (error) { console.warn("Data tidak dapat disimpan permanen:", error); }
+      }
+
+      // [24] Format angka ke Rupiah (85.000 -> Rp85.000).
+      function rupiah(angka) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency", currency: "IDR", maximumFractionDigits: 0
+        }).format(angka);
+      }
+
+      // [25] Notifikasi ditampilkan dengan addClass/removeClass Tailwind.
+      function tampilkanPesan(pesan, jenis = "success") {
+        const $pesan = $("#beli-notifikasi");
+        // Hapus semua kelas warna status agar pesan lama tidak memengaruhi warna baru.
+        $pesan.removeClass("hidden border-emerald-200 bg-emerald-50 text-emerald-800 border-sky-200 bg-sky-50 text-sky-800 border-rose-200 bg-rose-50 text-rose-800");
+        if (jenis === "success") $pesan.addClass("border-emerald-200 bg-emerald-50 text-emerald-800");
+        else if (jenis === "info") $pesan.addClass("border-sky-200 bg-sky-50 text-sky-800");
+        else $pesan.addClass("border-rose-200 bg-rose-50 text-rose-800");
+        $pesan.text(pesan); // .text() aman untuk menampilkan teks biasa.
+      }
+
+      // [26] Filter data berdasarkan pilihan bulan DAN kata kunci pencarian.
+      function ambilDataTersaring() {
+        const bulanDipilih = $("#beli-filterBulan").val();
+        const kataKunci = $("#beli-cariTransaksi").val().trim().toLowerCase();
+        return transaksi.filter(function (item) {
+          const bulan = item.tanggal.substring(5, 7); // "2026-03-07" -> "03"
+          const cocokBulan = bulanDipilih === "" || bulan === bulanDipilih;
+          const cocokKata = (item.nama + " " + item.kategori + " " + item.pemasok).toLowerCase().includes(kataKunci);
+          return cocokBulan && cocokKata;
+        });
+      }
+
+      // [27] Chart.js membuat grafik batang pembelian dari 12 bulan.
+      //      Canvas ini punya ID sendiri agar tidak berbenturan dengan grafik penjualan.
+      const grafik = new Chart(document.getElementById("beli-grafikPembelian"), {
+        type: "bar",
+        data: {
+          labels: namaBulan,
+          datasets: [{
+            label: "Nilai Pembelian", data: Array(12).fill(0),
+            backgroundColor: "#4f46e5", hoverBackgroundColor: "#4338ca",
+            borderRadius: 7, maxBarThickness: 46
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: function (konteks) { return rupiah(konteks.parsed.y); } } }
+          },
+          scales: {
+            y: { beginAtZero: true, border: { display: false },
+              grid: { color: "#edf2f7" }, ticks: {
+                callback: function (nilai) {
+                  return "Rp" + new Intl.NumberFormat("id-ID", { notation: "compact" }).format(nilai);
+                }
+              }
+            },
+            x: { border: { display: false }, grid: { display: false } }
+          }
+        }
+      });
+
+      // [28] .reduce() menghitung nilai akumulasi dari sebuah array.
+      function perbaruiStatistik(data) {
+        const totalBiayaPembelian = data.reduce((total, item) => total + item.jumlah * item.hargaBeli, 0);
+        const totalUnit = data.reduce((total, item) => total + item.jumlah, 0);
+        const jumlahTransaksi = data.length;
+        const rataRata = jumlahTransaksi > 0 ? totalBiayaPembelian / jumlahTransaksi : 0;
+        $("#beli-nilaiPembelian").text(rupiah(totalBiayaPembelian));
+        $("#beli-nilaiTransaksi").text(jumlahTransaksi);
+        $("#beli-nilaiUnit").text(totalUnit);
+        $("#beli-nilaiRataRata").text(rupiah(rataRata));
+      }
+
+      // [29] Menjumlahkan nilai pembelian per bulan, lalu meminta Chart.js menggambar ulang.
+      function perbaruiGrafik(data) {
+        const totalBulananPembelian = Array(12).fill(0);
+        data.forEach(function (item) {
+          const indeksBulan = Number(item.tanggal.substring(5, 7)) - 1;
+          totalBulananPembelian[indeksBulan] += item.jumlah * item.hargaBeli;
+        });
+        grafik.data.datasets[0].data = totalBulananPembelian;
+        grafik.update();
+      }
+
+      // [30] Membuat baris-baris tabel menggunakan jQuery, tanpa template HTML mentah.
+      // Nilai nama produk dimasukkan melalui .text(), bukan .html() agar aman.
+      function perbaruiTabel(data) {
+        const $tbody = $("#beli-tabelTransaksi");
+        $tbody.empty(); // Hapus baris sebelumnya, agar tidak muncul duplikasi.
+        $("#beli-jumlahBaris").text(data.length);
+
+        if (data.length === 0) {
+          $tbody.append($("<tr>").append(
+            $("<td>").attr("colspan", 8).addClass("px-5 py-10 text-center text-slate-400")
+              .text("Tidak ada transaksi yang sesuai dengan filter.")
+          ));
+          return;
+        }
+
+        data.slice().sort(function (a, b) {
+          return b.tanggal.localeCompare(a.tanggal); // Tanggal terbaru dulu.
+        }).forEach(function (item) {
+          const subtotal = item.jumlah * item.hargaBeli;
+          const $baris = $("<tr>").addClass("transition-colors hover:bg-slate-50");
+          $baris.append($("<td>").addClass("whitespace-nowrap px-4 py-4 text-slate-500").text(item.tanggal));
+          $baris.append($("<td>").addClass("px-4 py-4 font-semibold text-slate-800").text(item.nama));
+          $baris.append($("<td>").addClass("px-4 py-4 text-slate-600").text(item.pemasok));
+          $baris.append($("<td>").addClass("px-4 py-4").append(
+            $("<span>").addClass("inline-flex rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700").text(item.kategori)
+          ));
+          $baris.append($("<td>").addClass("px-4 py-4 text-center").text(item.jumlah));
+          $baris.append($("<td>").addClass("whitespace-nowrap px-4 py-4 text-right text-slate-600").text(rupiah(item.hargaBeli)));
+          $baris.append($("<td>").addClass("whitespace-nowrap px-4 py-4 text-right font-semibold").text(rupiah(subtotal)));
+          // data-id memberi tahu transaksi mana yang harus dihapus.
+          const $tombol = $("<button>").attr({ type: "button", "data-id": item.id,
+              "aria-label": "Hapus transaksi " + item.nama })
+            .addClass("beli-btn-hapus rounded-lg border border-rose-200 px-3 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50")
+            .text("Hapus");
+          $baris.append($("<td>").addClass("px-4 py-4 text-center").append($tombol));
+          $tbody.append($baris);
+        });
+      }
+
+      // [31] Hanya menyinkronkan panel PEMBELIAN. Kode penjualan mengurus panelnya sendiri.
+      function perbaruiDashboard() {
+        const data = ambilDataTersaring();
+        perbaruiStatistik(data);
+        perbaruiGrafik(data);
+        perbaruiTabel(data);
+      }
+
+      // ===================== G. EVENT FILTER =====================
+      // [32] Ketika dropdown berubah atau pengguna mengetik, filter dihitung lagi.
+      $("#beli-filterBulan").on("change", perbaruiDashboard);
+      $("#beli-cariTransaksi").on("input", perbaruiDashboard);
+
+      // [33] Reset filter tidak menghapus data asli.
+      $("#beli-btnResetFilter").on("click", function () {
+        $("#beli-filterBulan").val("");
+        $("#beli-cariTransaksi").val("");
+        perbaruiDashboard();
+      });
+
+      // ===================== H. MODAL TANPA BOOTSTRAP =====================
+      // [34] jQuery menambah/menghapus kelas hidden dan flex untuk dialog modal.
+      let tombolPemicuModal = null;
+      function bukaModal() {
+        tombolPemicuModal = document.activeElement;
+        $("#beli-modalTambah").removeClass("hidden").addClass("flex").attr("aria-hidden", "false");
+        $("body").addClass("overflow-hidden");
+        $("#beli-inputProduk").trigger("focus");
+      }
+      function tutupModal() {
+        $("#beli-modalTambah").removeClass("flex").addClass("hidden").attr("aria-hidden", "true");
+        $("body").removeClass("overflow-hidden");
+        if (tombolPemicuModal && typeof tombolPemicuModal.focus === "function") tombolPemicuModal.focus();
+      }
+      $("#beli-btnBukaModal").on("click", bukaModal);
+      $(".beli-btn-tutup-modal").on("click", tutupModal);
+      // Menutup saat klik di luar panel, tetapi tidak saat klik bagian form.
+      $("#beli-modalTambah").on("click", function (event) {
+        if (event.target === this) tutupModal();
+      });
+      $(document).on("keydown", function (event) {
+        if (event.key === "Escape" && !$("#beli-modalTambah").hasClass("hidden")) tutupModal();
+      });
+
+      // [35] Submit form: validasi -> data baru -> simpan -> refresh dashboard.
+      $("#beli-formTambah").on("submit", function (event) {
+        event.preventDefault(); // Tanpa ini browser akan memuat ulang halaman.
+        const form = this;
+        const namaProduk = $("#beli-inputProduk").val().trim();
+        const namaPemasok = $("#beli-inputPemasok").val().trim();
+        if (namaProduk === "") {
+          $("#beli-inputProduk")[0].setCustomValidity("Nama produk tidak boleh hanya spasi.");
+        } else {
+          $("#beli-inputProduk")[0].setCustomValidity("");
+        }
+        // Validasi tambahan: required bawaan HTML tidak mendeteksi spasi saja.
+        $("#beli-inputPemasok")[0].setCustomValidity(namaPemasok === "" ? "Pemasok wajib diisi." : "");
+        if (!form.reportValidity()) return;
+
+        // [36] Nilai input string dikonversi ke number untuk perhitungan.
+        const transaksiBaru = {
+          id: Math.max(0, ...transaksi.map(item => item.id)) + 1,
+          tanggal: $("#beli-inputTanggal").val(),
+          nama: namaProduk,
+          kategori: $("#beli-inputKategori").val(),
+          pemasok: namaPemasok,
+          jumlah: Number($("#beli-inputJumlah").val()),
+          hargaBeli: Number($("#beli-inputHarga").val())
+        };
+        transaksi.push(transaksiBaru);
+        simpanData();
+        $("#beli-filterBulan, #beli-cariTransaksi").val("");
+        perbaruiDashboard();
+        tampilkanPesan("Transaksi pembelian berhasil ditambahkan.");
+        form.reset();
+        $("#beli-inputProduk")[0].setCustomValidity("");
+        $("#beli-inputPemasok")[0].setCustomValidity("");
+        tutupModal();
+      });
+      // Reset pesan validasi saat pengguna mengoreksi isi input.
+      $("#beli-inputProduk, #beli-inputPemasok").on("input", function () { this.setCustomValidity(""); });
+
+      // [37] Event delegation diperlukan karena tombol Hapus dibuat dinamis.
+      //      Selector menggunakan awalan beli- supaya tidak menangkap tombol penjualan.
+      $("#beli-tabelTransaksi").on("click", ".beli-btn-hapus", function () {
+        const idDihapus = Number($(this).attr("data-id"));
+        if (!window.confirm("Yakin ingin menghapus transaksi pembelian ini?")) return;
+        transaksi = transaksi.filter(item => item.id !== idDihapus);
+        simpanData();
+        perbaruiDashboard();
+        tampilkanPesan("Transaksi pembelian telah dihapus.", "info");
+      });
+
+      // [38] Data contoh bisa dikembalikan setelah mahasiswa mencoba CRUD.
+      $("#beli-btnResetData").on("click", function () {
+        if (!window.confirm("Kembalikan seluruh data pembelian ke contoh awal?")) return;
+        transaksi = dataAwal.map(item => ({ ...item }));
+        simpanData();
+        $("#beli-filterBulan, #beli-cariTransaksi").val("");
+        perbaruiDashboard();
+        tampilkanPesan("Data pembelian contoh telah dipulihkan.", "info");
+      });
+
+      // ===================== I. SIDEBAR RESPONSIF =====================
+      // [39] Sidebar mobile dibuka/ditutup dengan toggle class Tailwind.
+      function aturSidebar(buka) {
+        $("#beli-sidebar").toggleClass("-translate-x-full", !buka);
+        $("#beli-overlaySidebar").toggleClass("hidden", !buka);
+        $("#beli-btnMenu").attr("aria-expanded", String(buka));
+      }
+      $("#beli-btnMenu").on("click", function () {
+        aturSidebar($("#beli-sidebar").hasClass("-translate-x-full"));
+      });
+      $("#beli-overlaySidebar, .beli-tautan-menu").on("click", function () { aturSidebar(false); });
+      // Saat melebar ke desktop, bersihkan state overlay mobile.
+      $(window).on("resize", function () {
+        if (window.innerWidth >= 1024) aturSidebar(false);
+      });
+
+      // [40] Memunculkan kondisi awal ketika halaman pertama kali dibuka.
+      perbaruiDashboard();
+    });
+  
+  </script>
+
+  <!-- Logika asli dashboard penjualan (Bootstrap + jQuery + Chart.js). -->
+  <script>
+
+    // [21] $(function () {...}) berjalan setelah semua elemen HTML siap.
+    $(function () {
+
+      // [22] Array berisi object: setiap object mewakili satu transaksi.
+      // Data ini adalah CONTOH, bukan transaksi sungguhan.
+      const dataAwal = [
+        { id: 1,  tanggal: "2026-01-12", nama: "Mouse Wireless",    kategori: "Aksesoris",   jumlah: 3, harga: 85000 },
+        { id: 2,  tanggal: "2026-01-27", nama: "Keyboard Mechanical",kategori: "Aksesoris",   jumlah: 1, harga: 425000 },
+        { id: 3,  tanggal: "2026-02-09", nama: "Flashdisk 64 GB",   kategori: "Penyimpanan", jumlah: 5, harga: 95000 },
+        { id: 4,  tanggal: "2026-03-07", nama: "SSD 512 GB",        kategori: "Penyimpanan", jumlah: 2, harga: 615000 },
+        { id: 5,  tanggal: "2026-03-21", nama: "Mousepad",          kategori: "Aksesoris",   jumlah: 8, harga: 35000 },
+        { id: 6,  tanggal: "2026-04-11", nama: "Webcam Full HD",    kategori: "Perangkat",   jumlah: 2, harga: 345000 },
+        { id: 7,  tanggal: "2026-05-16", nama: "Headset",           kategori: "Aksesoris",   jumlah: 4, harga: 175000 },
+        { id: 8,  tanggal: "2026-06-03", nama: "USB Hub",           kategori: "Aksesoris",   jumlah: 6, harga: 72000 },
+        { id: 9,  tanggal: "2026-07-22", nama: "Monitor 24 Inci",  kategori: "Perangkat",   jumlah: 1, harga: 1690000 },
+        { id: 10, tanggal: "2026-08-14", nama: "SSD 1 TB",         kategori: "Penyimpanan", jumlah: 2, harga: 1100000 },
+        { id: 11, tanggal: "2026-09-08", nama: "Keyboard Wireless", kategori: "Aksesoris",   jumlah: 3, harga: 235000 },
+        { id: 12, tanggal: "2026-10-12", nama: "Flashdisk 128 GB", kategori: "Penyimpanan", jumlah: 5, harga: 145000 },
+        { id: 13, tanggal: "2026-10-24", nama: "Laptop Stand",     kategori: "Aksesoris",   jumlah: 2, harga: 210000 },
+        { id: 14, tanggal: "2026-11-03", nama: "Mouse Wireless",    kategori: "Aksesoris",   jumlah: 4, harga: 85000 },
+        { id: 15, tanggal: "2026-11-05", nama: "Webcam Full HD",    kategori: "Perangkat",   jumlah: 1, harga: 345000 }
+      ];
+
+      // [23] Konstanta untuk nama tempat menyimpan data di browser.
+      const KUNCI_DATA = "dashboard-praktikum-penjualan-2026-v1";
+      const namaBulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+                         "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+
+      // [24] Fungsi memuat data dari localStorage; jika kosong gunakan dataAwal.
+      function muatData() {
+        try {
+          const isi = localStorage.getItem(KUNCI_DATA);
+          if (isi !== null) {
+            const hasil = JSON.parse(isi);  // Mengubah teks JSON menjadi array.
+            if (Array.isArray(hasil)) return hasil;
+          }
+        } catch (error) {
+          console.warn("Penyimpanan browser tidak tersedia:", error);
+        }
+        return dataAwal.map(item => ({ ...item })); // Salin data contoh.
+      }
+
+      // [25] Data aplikasi disimpan di variabel let karena akan berubah.
+      let transaksi = muatData();
+
+      // [26] Fungsi ini menyimpan array sebagai teks JSON di browser.
+      function simpanData() {
+        try {
+          localStorage.setItem(KUNCI_DATA, JSON.stringify(transaksi));
+        } catch (error) {
+          console.warn("Data hanya tersimpan selama halaman terbuka:", error);
+        }
+      }
+
+      // [27] Intl.NumberFormat memformat bilangan, contoh: 85000 -> Rp85.000.
+      function rupiah(angka) {
+        return new Intl.NumberFormat("id-ID", {
+          style: "currency", currency: "IDR", maximumFractionDigits: 0
+        }).format(angka);
+      }
+
+      // [28] Fungsi kecil untuk notifikasi setelah pengguna melakukan aksi.
+      function tampilkanPesan(pesan, jenis = "success") {
+        $("#notifikasi")
+          .removeClass("d-none alert-success alert-info alert-danger")
+          .addClass("alert-" + jenis)
+          .text(pesan);
+      }
+
+      // [29] Mengambil transaksi yang memenuhi pilihan bulan DAN pencarian.
+      function ambilDataTersaring() {
+        const bulanDipilih = $("#filterBulan").val();            // Contoh: "03".
+        const kataKunci = $("#cariTransaksi").val().trim().toLowerCase();
+
+        // .filter() membuat array BARU berisi item yang sesuai.
+        return transaksi.filter(function (item) {
+          const bulanTransaksi = item.tanggal.substring(5, 7);  // "2026-03-07" -> "03".
+          const cocokBulan = bulanDipilih === "" || bulanTransaksi === bulanDipilih;
+          const teksPencarian = (item.nama + " " + item.kategori).toLowerCase();
+          const cocokKata = teksPencarian.includes(kataKunci);
+          return cocokBulan && cocokKata;
+        });
+      }
+
+      // [30] Membuat grafik pertama kali; nanti datanya diperbarui dengan .update().
+      const grafik = new Chart(document.getElementById("grafikPenjualan"), {
+        type: "bar",                            // Jenis grafik: batang.
+        data: {
+          labels: namaBulan,                  // Label sumbu mendatar.
+          datasets: [{
+            label: "Omzet", data: Array(12).fill(0),
+            backgroundColor: "#2488a4", borderRadius: 7,
+            maxBarThickness: 45
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: { label: function (konteks) { return rupiah(konteks.parsed.y); } }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { callback: function (nilai) {
+                return "Rp" + new Intl.NumberFormat("id-ID", { notation: "compact" }).format(nilai);
+              } }
+            },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+
+      // [31] Memperbarui kartu angka statistik memakai hasil .reduce().
+      function perbaruiStatistik(data) {
+        const totalOmzet = data.reduce((total, item) => total + item.jumlah * item.harga, 0);
+        const totalUnit = data.reduce((total, item) => total + item.jumlah, 0);
+        const jumlahTransaksi = data.length;
+        const rataRata = jumlahTransaksi > 0 ? totalOmzet / jumlahTransaksi : 0;
+
+        $("#nilaiOmzet").text(rupiah(totalOmzet));
+        $("#nilaiTransaksi").text(jumlahTransaksi);
+        $("#nilaiUnit").text(totalUnit);
+        $("#nilaiRataRata").text(rupiah(rataRata));
+      }
+
+      // [32] Mengelompokkan nilai transaksi ke 12 bulan.
+      function perbaruiGrafik(data) {
+        const omzetBulanan = Array(12).fill(0);  // Semua bulan dimulai dengan angka 0.
+        data.forEach(function (item) {
+          const nomorBulan = Number(item.tanggal.substring(5, 7)) - 1;
+          omzetBulanan[nomorBulan] += item.jumlah * item.harga;
+        });
+        grafik.data.datasets[0].data = omzetBulanan;
+        grafik.update();                         // Meminta Chart.js menggambar ulang.
+      }
+
+      // [33] Menyusun tabel HTML dari array. .text() aman untuk teks pengguna.
+      function perbaruiTabel(data) {
+        const $tbody = $("#tabelTransaksi");
+        $tbody.empty();                          // Hapus baris lama agar tidak dobel.
+        $("#jumlahBaris").text(data.length);
+
+        if (data.length === 0) {
+          $tbody.append(
+            $("<tr>").append(
+              $("<td>").attr("colspan", 7).addClass("text-center teks-muted py-4")
+                .text("Tidak ada transaksi yang sesuai dengan filter.")
+            )
+          );
+          return;                                // Berhenti jika data kosong.
+        }
+
+        data.slice().sort(function (a, b) {
+          return b.tanggal.localeCompare(a.tanggal); // Urutkan tanggal terbaru dahulu.
+        }).forEach(function (item) {
+          const subtotal = item.jumlah * item.harga;
+          const $baris = $("<tr>");
+          $baris.append($("<td>").text(item.tanggal));
+          $baris.append($("<td>").addClass("fw-semibold").text(item.nama));
+          $baris.append($("<td>").append(
+            $("<span>").addClass("badge rounded-pill tag-kategori").text(item.kategori)
+          ));
+          $baris.append($("<td>").addClass("text-center").text(item.jumlah));
+          $baris.append($("<td>").addClass("text-end").text(rupiah(item.harga)));
+          $baris.append($("<td>").addClass("text-end fw-semibold").text(rupiah(subtotal)));
+
+          // Tombol mempunyai data-id, sehingga diketahui transaksi yang harus dihapus.
+          const $tombol = $("<button>")
+            .attr({ type: "button", "data-id": item.id, "aria-label": "Hapus " + item.nama })
+            .addClass("btn btn-sm btn-outline-danger btn-hapus")
+            .text("Hapus");
+          $baris.append($("<td>").addClass("text-center").append($tombol));
+          $tbody.append($baris);
+        });
+      }
+
+      // [34] Satu pintu pembaruan: filter -> statistik + grafik + tabel.
+      function perbaruiDashboard() {
+        const data = ambilDataTersaring();
+        perbaruiStatistik(data);
+        perbaruiGrafik(data);
+        perbaruiTabel(data);
+      }
+
+      // [35] .on('change') berjalan ketika dropdown bulan diganti.
+      $("#filterBulan").on("change", perbaruiDashboard);
+      // [36] .on('input') berjalan setiap kali pengguna mengetik pada kotak cari.
+      $("#cariTransaksi").on("input", perbaruiDashboard);
+
+      // [37] Tombol reset filter mengosongkan input lalu menampilkan semua data.
+      $("#btnResetFilter").on("click", function () {
+        $("#filterBulan").val("");
+        $("#cariTransaksi").val("");
+        perbaruiDashboard();
+      });
+
+      // [38] .on('submit') menangani pengiriman form tanpa me-reload halaman.
+      $("#formTambah").on("submit", function (event) {
+        event.preventDefault();                 // Mencegah browser me-refresh halaman.
+        const form = this;                     // this menunjuk elemen form HTML.
+        const namaProduk = $("#inputProduk").val().trim();
+
+        // checkValidity() memeriksa required, min, max, dan tipe input.
+        if (!form.checkValidity() || namaProduk === "") {
+          $(form).addClass("was-validated");
+          if (namaProduk === "") $("#inputProduk").val("");
+          return;
+        }
+
+        // [39] Bentuk object baru dari nilai input form.
+        const transaksiBaru = {
+          id: Math.max(0, ...transaksi.map(item => item.id)) + 1,
+          tanggal: $("#inputTanggal").val(),
+          nama: namaProduk,
+          kategori: $("#inputKategori").val(),
+          jumlah: Number($("#inputJumlah").val()),
+          harga: Number($("#inputHarga").val())
+        };
+
+        transaksi.push(transaksiBaru);        // Tambahkan object ke array.
+        simpanData();                         // Simpan ke localStorage.
+        $("#filterBulan").val("");            // Tampilkan seluruh data, termasuk yang baru.
+        $("#cariTransaksi").val("");
+        perbaruiDashboard();
+        tampilkanPesan("Transaksi berhasil ditambahkan.");
+
+        form.reset();                         // Kosongkan form.
+        $(form).removeClass("was-validated");
+        bootstrap.Modal.getInstance(document.getElementById("modalTambah")).hide();
+      });
+
+      // [40] Event delegation: tombol Hapus dibuat secara dinamis setelah halaman terbuka.
+      $("#tabelTransaksi").on("click", ".btn-hapus", function () {
+        const idDihapus = Number($(this).attr("data-id"));
+        if (!window.confirm("Yakin ingin menghapus transaksi ini?")) return;
+        transaksi = transaksi.filter(item => item.id !== idDihapus);
+        simpanData();
+        perbaruiDashboard();
+        tampilkanPesan("Transaksi telah dihapus.", "info");
+      });
+
+      // [41] Kembali ke dataset simulasi dan simpan hasilnya.
+      $("#btnResetData").on("click", function () {
+        if (!window.confirm("Kembalikan semua data ke contoh awal?")) return;
+        transaksi = dataAwal.map(item => ({ ...item }));
+        simpanData();
+        $("#filterBulan").val("");
+        $("#cariTransaksi").val("");
+        perbaruiDashboard();
+        tampilkanPesan("Data contoh telah dipulihkan.", "info");
+      });
+
+      // [42] Pemanggilan pertama agar kartu/grafik/tabel langsung terisi saat dibuka.
+      perbaruiDashboard();
+    });
+  
+  </script>
+
+  <!-- Navigasi untuk berpindah tampilan tanpa meninggalkan satu file HTML. -->
+  <script>
+    $(function () {
+      function tampilkanDashboard(jenis) {
+        const pembelianAktif = jenis === "pembelian";
+        $("#panel-pembelian").toggle(pembelianAktif);
+        $("#panel-penjualan").toggle(!pembelianAktif);
+        $("#pilih-pembelian").toggleClass("aktif", pembelianAktif)
+          .attr("aria-pressed", String(pembelianAktif));
+        $("#pilih-penjualan").toggleClass("aktif", !pembelianAktif)
+          .attr("aria-pressed", String(!pembelianAktif));
+        // Meminta Chart.js menyesuaikan ukuran grafik setelah panel ditampilkan.
+        $(window).trigger("resize");
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+      $("#pilih-pembelian").on("click", function () { tampilkanDashboard("pembelian"); });
+      $("#pilih-penjualan").on("click", function () { tampilkanDashboard("penjualan"); });
+    });
+  </script>
+</body>
+</html>
